@@ -1,0 +1,17 @@
+[build-system]
+requires = []
+build-backend = "depdiff.build_backend"
+backend-path = ["."]
+
+[project]
+name = "depdiff"
+version = "0.1.0"
+description = "Behavioral dependency security and upgrade review tool"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+license = {text = "MIT"}
+authors = [{name = "depdiff contributors"}]
+dependencies = []
+
+[project.scripts]
+depdiff = "depdiff.cli:main"

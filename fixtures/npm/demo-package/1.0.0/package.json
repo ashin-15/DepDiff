@@ -1,0 +1,12 @@
+{
+  "name": "demo-package",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "debug": "^4.3.0"
+  }
+}

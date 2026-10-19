@@ -1,0 +1,6 @@
+# depdiff dependency lockfile for Python 3.11.2.
+#
+# This file intentionally contains no package records: runtime and test code use
+# only the Python standard library. The empty lock is part of the reproducible
+# offline install contract; do not add an unpinned dependency here.
+# YAML rules are loaded by the repository's documented constrained parser.
