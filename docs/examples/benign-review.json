@@ -1,0 +1,37 @@
+{
+  "assessment": {
+    "reasons": [
+      "No new capability evidence or modified lifecycle scripts were found."
+    ],
+    "score": 0,
+    "severity": null,
+    "verdict": "ok"
+  },
+  "capabilities": {
+    "diff": {
+      "added": [],
+      "changes": [],
+      "removed": [],
+      "unchanged": []
+    },
+    "new": {
+      "capabilities": [],
+      "findings": []
+    },
+    "old": {
+      "capabilities": [],
+      "findings": []
+    }
+  },
+  "metadata_diff": {
+    "changes": [],
+    "dependencies": [],
+    "entry_points": [],
+    "lifecycle_scripts": []
+  },
+  "package": {
+    "name": "benign-package",
+    "new_version": "1.1.0",
+    "old_version": "1.0.0"
+  }
+}
