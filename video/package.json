@@ -1,0 +1,38 @@
+{
+  "name": "depdiff-demo-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An evidence-driven, offline-renderable DepDiff demo made with Remotion.",
+  "type": "module",
+  "engines": {
+    "node": "22.23.3"
+  },
+  "scripts": {
+    "capture": "node scripts/capture-demo.mjs",
+    "assets": "python3 scripts/make-audio.py",
+    "prepare-demo": "npm run capture && npm run assets",
+    "studio": "remotion studio src/index.ts --port=3000",
+    "browser": "remotion browser ensure",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run typecheck && node --test scripts/*.test.mjs",
+    "render": "npm run prepare-demo && remotion render src/index.ts DepDiffDemo out/depdiff-demo.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --concurrency=2",
+    "poster": "remotion still src/index.ts DepDiffDemo out/depdiff-poster.png --frame=105",
+    "verify": "node scripts/verify-video.mjs"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/inter": "5.3.0",
+    "@remotion/cli": "4.0.537",
+    "@remotion/media": "4.0.537",
+    "@remotion/transitions": "4.0.537",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.537"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}

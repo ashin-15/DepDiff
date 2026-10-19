@@ -94,6 +94,14 @@ The benign scenario remains `ok`:
 $ python3 -m depdiff npm benign-package 1.0.0 1.1.0 --fixtures-dir fixtures
 ```
 
+### Demo video
+
+A 52-second, 1080p Remotion demo shows the actual offline CLI comparison,
+new capability evidence, benign contrast, and Markdown review export. The
+editable video source, pinned dependencies, and rebuild instructions are in
+[`video/README.md`](video/README.md). No Node.js dependency is required to run
+the DepDiff CLI or its Python tests.
+
 ## Installation
 
 For local development, running `python3 -m depdiff` does not require an

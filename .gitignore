@@ -15,3 +15,6 @@ reports/
 !.env.example
 *.pem
 *.key
+node_modules/
+video/out/
+video/public/score.wav
