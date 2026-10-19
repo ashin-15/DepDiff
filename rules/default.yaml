@@ -1,0 +1,57 @@
+version: 1
+rules:
+  - id: crypto-node-api
+    capability: crypto
+    severity: LOW
+    pattern: '\b(?:crypto|node:crypto)\.(?:createHash|createHmac|createCipheriv|createDecipheriv|randomBytes|subtle)\s*\('
+    description: 'Uses a Node.js cryptographic API.'
+    reason: 'Cryptographic operations can protect data, but they can also conceal or transform sensitive package behavior.'
+  - id: dynamic-code-evaluation
+    capability: dynamic-code
+    severity: HIGH
+    pattern: '\b(?:eval|Function)\s*\('
+    description: 'Evaluates dynamically constructed JavaScript.'
+    reason: 'Dynamic code execution makes behavior harder to review statically and can execute data as code.'
+  - id: dynamic-code-vm
+    capability: dynamic-code
+    severity: HIGH
+    pattern: '\b(?:vm|node:vm)\.(?:runInNewContext|runInContext|runInThisContext|Script)\s*\('
+    description: 'Uses the Node.js VM APIs to execute code.'
+    reason: 'VM execution can run dynamically selected code that is not visible in the surrounding source.'
+  - id: env-process
+    capability: env
+    severity: MEDIUM
+    pattern: '\bprocess\.env(?:\.[A-Za-z_$][\w$]*)?'
+    description: 'Reads a process environment variable.'
+    reason: 'Environment variables can contain credentials, tokens, paths, and machine-specific information.'
+  - id: fs-file-operation
+    capability: fs
+    severity: MEDIUM
+    pattern: '\b(?:fs|fs/promises)\.(?:readFile|readFileSync|writeFile|writeFileSync|appendFile|appendFileSync|unlink|unlinkSync|rm|rmSync|mkdir|mkdirSync|readdir|readdirSync|stat|statSync|open|openSync|createReadStream|createWriteStream)\s*\('
+    description: 'Performs a filesystem operation through Node.js fs APIs.'
+    reason: 'Filesystem access can read or modify files outside the package source tree.'
+  - id: install-script-lifecycle
+    capability: install-script
+    severity: HIGH
+    source: metadata
+    pattern: '^scripts\.(?:preinstall|install|postinstall)$'
+    description: 'Defines an npm lifecycle installation script.'
+    reason: 'Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.'
+  - id: network-fetch
+    capability: network
+    severity: MEDIUM
+    pattern: '\bfetch\s*\('
+    description: 'Uses the Fetch API to make a network request.'
+    reason: 'Network access can retrieve remote content or send package and host data.'
+  - id: network-node-client
+    capability: network
+    severity: MEDIUM
+    pattern: '\b(?:https?|http2|net|tls|dns)\.(?:request|get|connect|lookup|resolve|createConnection)\s*\('
+    description: 'Uses a Node.js HTTP, socket, TLS, or DNS client API.'
+    reason: 'Direct network and DNS APIs can communicate with hosts that are not visible in package metadata.'
+  - id: process-child-process
+    capability: process
+    severity: HIGH
+    pattern: '\b(?:child_process|node:child_process)\.(?:exec|execFile|spawn|fork)\s*\(|\b(?:exec|execFile|spawn|fork)\s*\('
+    description: 'Starts or executes a child process.'
+    reason: 'Process execution can invoke shell commands and affect the host outside the JavaScript runtime.'
