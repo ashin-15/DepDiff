@@ -107,7 +107,10 @@ NODE_PATH="$PWD/.venv/showcase-browser/node_modules" \
 The runner checks real report contents, finding selection, all output formats,
 Markdown download bytes, scenario switching, keyboard controls, copy behavior,
 setup commands, FAQ disclosure, mobile navigation, 320/390/768/1440-pixel layouts,
-reduced-motion rendering, report-load failure/retry, and no-JavaScript content.
+readable typography and reflow at default and 200% text size, reduced-motion
+rendering, report-load failure/retry, and no-JavaScript content. Typography checks
+require at least 1rem body copy, 0.875rem controls/code, and 0.75rem supporting
+labels without overriding the browser's default root font size.
 It applies the Vercel security headers to the functional browser session and
 rejects third-party requests and browser errors. Axe checks WCAG 2/2.1 A/AA on
 desktop and mobile; automated checks are not a complete accessibility audit.

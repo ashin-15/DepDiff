@@ -1,0 +1,7 @@
+# Deploy only the static showcase and its Vercel configuration.
+*
+!showcase
+!showcase/**
+!vercel.json
+showcase/Dockerfile
+showcase/.dockerignore

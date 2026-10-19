@@ -20,6 +20,30 @@ async function checkWidth(page) {
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Page must not overflow horizontally');
 }
 
+async function checkTypography(page) {
+  const groups = [
+    { minimum: 1, selector: '.hero-description, #evidence-reason, #verdict-description, .demo-disclaimer, .section-heading > p:last-child, .capability-detail p, .feature-notes p, .workflow-steps p, .use-case-list p, .start-copy > p:not(.section-index), .faq-list details p, .closing p, .footer-note' },
+    { minimum: .875, selector: '.scenario-tabs button, #demo-command, .finding-name, .evidence-line code, #raw-output, .format-tabs button, .text-button, .desktop-nav, .header-github, .button, .capability-options button, .quickstart-tabs button, .setup-step pre, .pipeline code, .cap-code code, .site-footer nav, .inline-link' },
+    { minimum: .75, selector: '.severity, .pane-label, .pane-label > span, .micro-label, .score small, .principles span, .step-detail, .section-index, .setup-step > span, .version-tag, .window-chrome, .hero-note, .source-annotation, .line-number' },
+  ];
+  const result = await page.evaluate((checks) => {
+    const rootSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    return {
+      rootSize,
+      failures: checks.flatMap(({ minimum, selector }) => [...document.querySelectorAll(selector)]
+        .filter((element) => element.getClientRects().length)
+        .flatMap((element) => {
+          const size = parseFloat(getComputedStyle(element).fontSize);
+          return size + .01 < minimum * rootSize
+            ? [`${element.id || element.className}: ${size}px, expected at least ${minimum * rootSize}px`]
+            : [];
+        })),
+    };
+  }, groups);
+  assert(result.rootSize >= 16, 'The site must not shrink the browser’s default font size');
+  assert.deepEqual(result.failures, [], 'Text must keep a readable, preference-relative type scale');
+}
+
 async function audit(page, label) {
   if (!process.env.AXE_MODULE) return;
   // Only the locally installed testing tool is injected, never a site dependency.
@@ -60,8 +84,10 @@ async function main() {
     assert.equal(await page.locator('#report-score').textContent(), '8');
     assert.equal(await page.locator('#verdict-title').textContent(), 'Block recommended');
     await checkWidth(page);
+    await checkTypography(page);
     await page.screenshot({ path: path.join(output, 'desktop.png') });
     await page.screenshot({ path: path.join(output, 'desktop-full.png'), fullPage: true });
+    await page.locator('#demo').screenshot({ path: path.join(output, 'desktop-demo.png') });
     // Axe uses injected styles internally, so audit without the production CSP.
     const auditPage = await browser.newPage({ viewport: { width: 1440, height: 1050 } });
     await auditPage.goto(base);
@@ -77,6 +103,7 @@ async function main() {
       const text = await page.locator('#raw-output').textContent();
       if (format === 'json') assert.deepEqual(JSON.parse(text), expected.scenarios[0].report);
       else assert.equal(text, expected.scenarios[0][format]);
+      await checkTypography(page);
     }
     const downloadEvent = page.waitForEvent('download');
     await page.locator('#download-report').click();
@@ -118,8 +145,10 @@ async function main() {
     await visible(mobile, '#demo-content');
     await mobile.evaluate(() => document.fonts.ready);
     await checkWidth(mobile);
+    await checkTypography(mobile);
     await mobile.screenshot({ path: path.join(output, 'mobile.png') });
     await mobile.screenshot({ path: path.join(output, 'mobile-full.png'), fullPage: true });
+    await mobile.locator('#demo').screenshot({ path: path.join(output, 'mobile-demo.png') });
     await mobile.locator('.menu-toggle').click();
     assert.equal(await mobile.locator('.menu-toggle').getAttribute('aria-expanded'), 'true');
     await mobile.keyboard.press('Escape');
@@ -134,6 +163,23 @@ async function main() {
     await checkWidth(mobile);
     await mobile.setViewportSize({ width: 768, height: 1024 });
     await checkWidth(mobile);
+
+    // Reflow rather than shrinking type, including a doubled browser text preference.
+    for (const fontSize of ['100%', '200%']) {
+      await mobile.evaluate((size) => { document.documentElement.style.fontSize = size; }, fontSize);
+      for (const width of [320, 390, 768, 1440]) {
+        await mobile.setViewportSize({ width, height: 1024 });
+        for (const scenario of ['suspicious', 'benign', 'review']) {
+          await mobile.locator(`[data-scenario="${scenario}"]`).click();
+          await mobile.locator('[data-format="visual"]').click();
+          await checkWidth(mobile);
+          await checkTypography(mobile);
+        }
+        await mobile.locator('[data-format="json"]').click();
+        await checkWidth(mobile);
+        await checkTypography(mobile);
+      }
+    }
 
     const mobileAudit = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await mobileAudit.goto(base);
@@ -161,7 +207,7 @@ async function main() {
     assert.deepEqual(externalRequests, [], 'The showcase must make no third-party requests');
     assert.deepEqual(errors, [], 'The page must have no JavaScript or CSP console errors');
     assert.deepEqual(accessibilityFailures, [], 'Desktop and mobile must have no automated WCAG A/AA violations');
-    console.log('PASS: real reports, findings, all formats, download, scenarios, keyboard, capability explorer, copy, setup, FAQ, mobile menu, responsive widths, reduced motion, failure/retry, no-JS, CSP, and no external requests.');
+    console.log('PASS: real reports, findings, all formats, download, scenarios, keyboard, capability explorer, copy, setup, FAQ, mobile menu, readable typography, responsive widths at default and 200% text size, reduced motion, failure/retry, no-JS, CSP, and no external requests.');
     console.log(`Screenshots and accessibility results: ${path.relative(root, output)}`);
   } finally {
     await browser.close();

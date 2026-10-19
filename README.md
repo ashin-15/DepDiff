@@ -1,17 +1,42 @@
-# depdiff
+<div align="center">
+  <img src="showcase/assets/favicon.svg" alt="depdiff logo" width="80" height="80">
+  <h1>depdiff</h1>
+  <p><strong>Small update. Different behavior.</strong></p>
+  <p>Behavioral dependency security &amp; upgrade reviews.<br>See what changed behind the version number, before you merge.</p>
+  <p>
+    <a href="https://depdiff.vercel.app/#demo"><strong>Explore the live demo</strong></a>
+    &nbsp;·&nbsp; <a href="#quick-start">Quick start</a>
+    &nbsp;·&nbsp; <a href="#cli-and-reports">CLI reference</a>
+    &nbsp;·&nbsp; <a href="video/README.md">Demo video</a>
+  </p>
+  <p><code>Python 3.11.2</code> &nbsp; <code>Local-first</code> &nbsp; <code>No runtime dependencies</code> &nbsp; <code>MIT</code></p>
+</div>
 
-**Behavioral Dependency Security & Upgrade Review Tool**
+---
 
-depdiff compares two versions of an npm dependency and explains what changed
-in package metadata and statically visible JavaScript capabilities. It is built
-for a practical review question:
+**The version number changed. What else did?** depdiff compares two versions of
+an npm dependency and explains changes in package metadata and statically
+visible JavaScript capabilities. Get exact evidence, deterministic scores, and
+a review recommendation instead of another unexplained alert.
 
-> What changed in this dependency upgrade, what new capabilities appeared, and
-> should a developer review those changes before merging?
+[![depdiff upgrade review showing added installation-script, process, and filesystem capabilities, source evidence, and a block-recommended verdict](docs/images/suspicious-upgrade.png)](https://depdiff.vercel.app/#demo)
 
-depdiff is both an upgrade-review tool and a supply-chain security analyzer. It
-does not claim that a package is malicious or guaranteed safe. It produces
-deterministic evidence and a review recommendation for a human maintainer.
+<p align="center"><sub>The repository's own demo, using harmless local fixtures. Click the image to explore.</sub></p>
+
+| **7** capability categories | **3** shareable report formats | **0** package code executed |
+| :---: | :---: | :---: |
+| From network access to install scripts | Terminal · JSON · Markdown | Read-only analysis on your machine |
+
+> [!NOTE]
+> Evidence for review, not proof of maliciousness or safety. The website shows
+> precomputed reports; use the CLI to analyze your own local package versions.
+
+**On this page:** [Why depdiff?](#why-use-it) · [Features](#implemented-mvp) ·
+[Quick start](#quick-start) · [Reports](#cli-and-reports) ·
+[Rules](#rules-and-static-analysis) · [Docker](#docker) ·
+[Testing](#testing-and-reproducibility) · [Limitations](#security-model-and-limitations)
+
+---
 
 ## Why use it
 
@@ -32,39 +57,41 @@ yet have a known CVE. It is not a replacement for those tools.
 
 ## Implemented MVP
 
-- Python 3.11 CLI: `depdiff npm <package> <old-version> <new-version>`.
-- Offline directory fixtures with package name/version validation.
-- Safe fixture path checks, file-count and size limits, and safe tar archive
-  extraction helpers that reject traversal, links, and special files.
-- `package.json` comparison for lifecycle scripts, dependency sections, and
-  `main`, `bin`, and `exports` entry points.
-- External YAML rules loaded at runtime without executing package code.
-- Read-only regular-expression scanning of `.js`, `.mjs`, `.cjs`, and `.jsx`.
-- Findings with category, rule ID, severity, file, line, evidence, and reason.
-- Added, removed, and unchanged capability classification.
-- Deterministic scoring and `ok`, `review`, or `block-recommended` verdicts.
-- Terminal, JSON, and Markdown reports.
-- Standard-library-only tests and a Docker image definition.
+| What you do | What depdiff gives you |
+| --- | --- |
+| **Compare an upgrade** | Python CLI: `depdiff npm <package> <old-version> <new-version>`. Offline fixtures with package name/version validation. |
+| **Read the metadata** | Lifecycle scripts, dependency sections, and `main`, `bin`, and `exports` entry-point changes in `package.json`. |
+| **Spot new capabilities** | Read-only regex scanning of `.js`, `.mjs`, `.cjs`, and `.jsx`, using external YAML rules. Classifies added, removed, and unchanged categories. |
+| **Follow the evidence** | Category, rule ID, severity, source file, line number, snippet, and a reason for each finding. |
+| **Make a review decision** | Deterministic scores and `ok`, `review`, or `block-recommended` policy recommendations. |
+| **Share the result** | Terminal output, structured JSON, and pull-request-friendly Markdown. |
+| **Keep analysis contained** | Safe fixture paths, file-count and size limits, plus tar extraction helpers that reject traversal, links, and special files. No package execution. |
 
-## Rebuild from a clean Linux machine
+The core uses only Python's standard library, with offline tests and a pinned
+Docker image definition. The showcase and video are optional ways to explore it.
 
-The Docker workflow is the canonical rebuild path when the host does not have
-Python or the project tools installed. From the root of a clean checkout:
+### A closer look at capabilities
 
-```console
-$ docker build --tag depdiff:local .
-$ docker run --rm --entrypoint python depdiff:local \
-    -m unittest discover --start-directory /app/tests --verbose
-$ docker run --rm depdiff:local npm demo-package 1.0.0 2.0.0 \
-    --fixtures-dir /app/fixtures
-```
+<p align="center">
+  <img src="docs/images/capability-explorer.png" alt="Capability explorer listing all seven categories and explaining the child-process pattern with its high severity label" width="720">
+</p>
 
-The image build uses the pinned Python `3.11.2` Bookworm base image and installs
-the local package with no package index. The initial build needs access to that
-base image, either from a local Docker cache or the container registry. After
-the image is available, the test and demo commands are offline.
+**Network · Filesystem · Process · Environment · Dynamic code · Cryptography · Install scripts**
+
+Inspect the source pattern and its review context, then
+[read or extend the detection rules](rules/default.yaml). The explorer shows
+illustrative patterns, not runtime tracing.
 
 ## Quick start
+
+Use **Python 3.11.2** and `make`, or follow the [clean-machine Docker workflow](#docker).
+No API keys, package installation, or external service are needed for the demos.
+
+```sh
+git clone https://github.com/ashin-15/DepDiff.git
+cd DepDiff
+python3 -m depdiff npm demo-package 1.0.0 2.0.0 --fixtures-dir fixtures
+```
 
 The repository pins Python with `.python-version` and uses no third-party
 runtime or test dependencies. `requirements.lock` is intentionally an empty
@@ -78,21 +105,31 @@ $ make demo-benign
 $ make demo-markdown
 ```
 
-The most useful demonstration command is:
+### Two upgrades. Different signals.
 
-```console
-$ python3 -m depdiff npm demo-package 1.0.0 2.0.0 --fixtures-dir fixtures
-```
+**Suspicious upgrade: `demo-package 1.0.0 → 2.0.0`**
 
 The synthetic upgrade introduces a `postinstall` script, filesystem access,
 and child-process execution. The output includes evidence and recommends
 `block-recommended`. The fixture is harmless and is never executed.
 
-The benign scenario remains `ok`:
+**Benign upgrade: `benign-package 1.0.0 → 1.1.0`**
+
+The benign scenario remains `ok`, with no newly detected capability signal:
 
 ```console
 $ python3 -m depdiff npm benign-package 1.0.0 1.1.0 --fixtures-dir fixtures
 ```
+
+<details>
+<summary><strong>See the benign comparison</strong></summary>
+
+![Benign upgrade report showing no new capability findings, a zero review score, and the explicit caveat that an ok verdict is not a guarantee of safety](docs/images/benign-upgrade.png)
+
+An ordinary implementation change can remain `ok`. That means no new signal
+under the configured rules, not a guarantee of safety.
+
+</details>
 
 ### Demo video
 
@@ -103,6 +140,10 @@ editable video source, pinned dependencies, and rebuild instructions are in
 the DepDiff CLI or its Python tests.
 
 ## Static showcase
+
+**[Open the live showcase →](https://depdiff.vercel.app)** to switch between
+suspicious, benign, and capability-removal scenarios, inspect source evidence,
+and download reports. No account is needed.
 
 Preview the dependency-free HTML/CSS/JavaScript demo from the repository root:
 
@@ -149,12 +190,20 @@ $ depdiff npm demo-package 1.0.0 2.0.0 \
     --fixtures-dir fixtures --format markdown --output reports/review.md
 ```
 
-Options:
+| Option | Purpose |
+| --- | --- |
+| `--fixtures-dir PATH` | Local root containing `npm/<package>/<version>`. |
+| `--rules PATH` | Replace the shipped rules with a local YAML rule file. |
+| `--format terminal\|json\|markdown` | Choose the report format. |
+| `--output PATH` | Write a report to a file, creating parent directories. |
 
-- `--fixtures-dir PATH`: local root containing `npm/<package>/<version>`;
-- `--rules PATH`: replace the shipped rules with a local YAML rule file;
-- `--format terminal|json|markdown`: choose the report format;
-- `--output PATH`: write the report to a file, creating parent directories.
+### Read the recommendation
+
+| Verdict | How to use it |
+| --- | --- |
+| `ok` | No new capability signal under the configured policy. Not a guarantee of safety. |
+| `review` | Inspect the reported evidence before accepting the change. |
+| `block-recommended` | The policy recommends blocking pending closer human review. Not proof of maliciousness. |
 
 Execution failures, such as a missing fixture or invalid rule file, return a
 nonzero exit code. A security verdict is printed as report data and does not
@@ -225,7 +274,24 @@ CLI
 
 Details and extension points are in [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
+### Explore the repository
+
+| If you want to... | Start here |
+| --- | --- |
+| Walk through the offline scenarios | [Demo guide](docs/demo.md) |
+| See example report output | [Checked-in reports](docs/examples/) |
+| Understand the implementation | [Architecture and extension points](ARCHITECTURE.md) |
+| Preview or deploy the website | [Showcase guide](docs/showcase.md) |
+| Rebuild the README screenshots | [Image sources and capture steps](docs/images/README.md) |
+| Rebuild the 52-second demo video | [Video source and render guide](video/README.md) |
+
 ## Docker
+
+### Rebuild from a clean Linux machine
+
+The Docker workflow is the canonical rebuild path when the host does not have
+Python or the project tools installed. Run the following from the root of a
+clean checkout.
 
 The Dockerfile uses the pinned `python:3.11.2-slim-bookworm` base image, installs
 the local package without an index, and runs as a non-root user:
@@ -259,6 +325,11 @@ formats, CLI failures, offline execution, safe archive handling, and
 reproducible wheel builds. Tests use synthetic harmless samples and do not
 execute them.
 
+Optional [real-browser checks](docs/showcase.md#optional-real-browser-checks)
+cover the interactive showcase, responsive typography, and automated
+accessibility checks. The [README images](docs/images/README.md) are captured
+from that same local showcase using only repository-hosted assets.
+
 ## Security model and limitations
 
 depdiff is evidence for human review. `ok` means that the configured static
@@ -281,3 +352,7 @@ the current offline MVP.
 ## License
 
 MIT. See the project metadata for the current package version.
+
+---
+
+<p align="center"><strong>Know what changed. Then decide.</strong><br><a href="https://depdiff.vercel.app/#demo">Explore the demo</a> · <a href="#quick-start">Try it locally</a> · <a href="https://github.com/ashin-15/DepDiff">View on GitHub</a></p>
