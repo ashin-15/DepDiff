@@ -1,0 +1,2 @@
+# Keep bundled upstream font-license text portable across checkouts.
+showcase/assets/*-OFL.txt text eol=lf

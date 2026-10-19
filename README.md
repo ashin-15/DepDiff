@@ -102,6 +102,22 @@ editable video source, pinned dependencies, and rebuild instructions are in
 [`video/README.md`](video/README.md). No Node.js dependency is required to run
 the DepDiff CLI or its Python tests.
 
+## Static showcase
+
+Preview the dependency-free HTML/CSS/JavaScript demo from the repository root:
+
+```console
+$ make showcase
+```
+
+Open <http://localhost:4173>. The demo displays precomputed fixture reports; it
+does not run the Python analyzer on the host or in the browser. All assets are
+self-hosted, and no frontend dependencies, API keys, or secrets are needed.
+Use `make showcase-data` to regenerate reports; `make test` also checks that the
+committed demo data is current. See the [showcase deployment guide](docs/showcase.md)
+for Vercel import settings (Other, root `./`, output `showcase`) and the separate
+unprivileged static-serving Docker image.
+
 ## Installation
 
 For local development, running `python3 -m depdiff` does not require an

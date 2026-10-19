@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101310">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Know what changed in your npm dependency upgrade. depdiff compares metadata and JavaScript capabilities, with local analysis and evidence for human review.">
+  <meta property="og:title" content="depdiff | Small update. Different behavior.">
+  <meta property="og:description" content="An open-source, offline-first CLI for behavioral dependency security and upgrade reviews. See the change behind the version number.">
+  <meta property="og:type" content="website">
+  <title>depdiff | Small update. Different behavior.</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="./assets/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" type="module"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M15 8V4H4v11h4"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path d="M9 19c-4 1-4-2-6-2m12 4v-3.5c0-1 .1-1.5-.5-2 3-.3 6-1.5 6-6.5 0-1.5-.5-2.5-1.5-3.5.2-1 .2-2-.2-3 0 0-1.3-.2-3.8 1.5a14 14 0 0 0-6 0C6.5 2.3 5.2 2.5 5.2 2.5c-.4 1-.4 2-.2 3C4 6.5 3.5 7.5 3.5 9c0 5 3 6.2 6 6.5-.6.5-.5 1.5-.5 2V21"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><path d="m5 6 6 6-6 6m9 0h6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="19" r="2"/><path d="M6 7v10m0-3c0-6 12-1 12-6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m7 6-6 6 6 6m10-12 6 6-6 6m-3-15-4 18"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="depdiff home"><img src="./assets/favicon.svg" width="36" height="36" alt=""><span>dep<span class="brand-light">diff</span></span></a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#use-cases">Use cases</a>
+    </nav>
+    <a class="header-github" href="https://github.com/ashin-15/DepDiff" target="_blank" rel="noopener noreferrer" aria-label="depdiff on GitHub"><svg class="icon"><use href="#i-github"/></svg><span>GitHub</span><svg class="icon small"><use href="#i-external"/></svg></a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open navigation"><span></span><span></span></button>
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation" hidden><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#use-cases">Use cases</a><a href="#get-started">Get started</a></nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-content wrap">
+        <p class="eyebrow"><span class="status-dot"></span> OPEN SOURCE. OFFLINE FIRST.</p>
+        <div class="version-art" aria-hidden="true">
+          <span class="version-tag old">v1.0.0</span>
+          <svg viewBox="0 0 230 80" fill="none"><path class="art-line" d="M0 40h52c22 0 22-24 44-24h38c22 0 22 24 44 24h52"/><path class="art-line lower" d="M0 40h52c22 0 22 24 44 24h38c22 0 22-24 44-24h52"/><rect x="89" y="13" width="52" height="54" rx="12" fill="#17221a" stroke="#426549"/><path d="M102 30h11m-5.5-5.5v11M118 49h11" stroke="#b6edba" stroke-width="2.5" stroke-linecap="round"/><circle class="travel-dot" r="3" fill="#b6edba"><animateMotion dur="5s" repeatCount="indefinite" path="M0 40h52c22 0 22-24 44-24h38c22 0 22 24 44 24h52"/></circle></svg>
+          <span class="version-tag new">v2.0.0</span>
+        </div>
+        <h1 id="hero-title">Small update.<br><span>Different behavior.</span></h1>
+        <p class="hero-description">The version number changed. What else did?<br class="desktop-break"> Compare npm upgrades, uncover new capabilities, and get the evidence before you merge.</p>
+        <div class="hero-actions"><a class="button primary" href="#demo">Explore a real diff <svg class="icon"><use href="#i-arrow"/></svg></a><a class="button secondary" href="#get-started"><svg class="icon"><use href="#i-terminal"/></svg> Get started</a></div>
+        <p class="hero-note"><span>Python 3.11</span><span>No API keys</span><span>Never executes package code</span></p>
+      </div>
+    </section>
+
+    <section class="demo-section wrap" id="demo" aria-labelledby="demo-title">
+      <div class="demo-caption"><h2 id="demo-title">A small upgrade. A few important additions.</h2><span><span class="status-dot"></span> ACTUAL CLI OUTPUT, VISUALIZED</span></div>
+      <div class="review-window">
+        <div class="window-chrome"><div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div><span>depdiff <span class="dim">/</span> upgrade review</span><span class="chrome-label">READ-ONLY ANALYSIS</span></div>
+        <div class="demo-toolbar"><div class="scenario-tabs" role="group" aria-label="Example comparison"><button type="button" data-scenario="suspicious" aria-pressed="true" disabled>Suspicious upgrade</button><button type="button" data-scenario="benign" aria-pressed="false" disabled>Benign upgrade</button><button type="button" data-scenario="review" aria-pressed="false" disabled>Capability removal</button></div><span class="fixture-label">SYNTHETIC FIXTURES</span></div>
+        <div class="demo-command"><span class="prompt">$</span><code id="demo-command" tabindex="0" aria-label="Example CLI command">python3 -m depdiff npm demo-package 1.0.0 2.0.0 --fixtures-dir fixtures</code><button type="button" class="icon-button" data-copy-target="demo-command" aria-label="Copy example command"><svg class="icon"><use href="#i-copy"/></svg></button></div>
+        <div id="demo-loading" class="demo-loading" role="status">The interactive comparison requires JavaScript.</div>
+        <div id="demo-error" class="demo-error" hidden><p>The saved report could not be loaded. The CLI still works offline.</p><button type="button" class="text-button" id="retry-demo">Try again <svg class="icon small"><use href="#i-arrow"/></svg></button></div>
+        <noscript><p class="demo-error">Enable JavaScript to explore the saved reports, or run the command above in a local checkout.</p></noscript>
+        <div id="demo-content" hidden>
+          <div class="report-heading"><div><svg class="icon"><use href="#i-branch"/></svg><strong id="report-package">demo-package</strong><span id="report-versions" class="mono">1.0.0 <span class="dim">→</span> 2.0.0</span></div><span class="analysis-done"><svg class="icon small"><use href="#i-check"/></svg> Comparison complete</span></div>
+          <div class="visual-report" id="visual-report">
+            <div class="findings-pane"><div class="pane-label">CAPABILITY CHANGES <span id="change-count">3 added</span></div><div id="finding-list" class="finding-list" role="group" aria-label="Capability findings"></div><p id="metadata-summary" class="metadata-summary"></p></div>
+            <div class="evidence-pane"><div class="pane-label"><span id="evidence-location">lib/index.js:6</span><span id="evidence-rule">process-child-process</span></div><div class="source-evidence"><p class="source-annotation" id="evidence-change">+ Newly introduced capability</p><div class="evidence-line"><span id="evidence-line" class="line-number">6</span><code id="evidence-code">exec('echo setup');</code></div></div><div class="evidence-explanation"><span class="micro-label">WHY IT MATTERS</span><p id="evidence-reason"></p></div></div>
+          </div>
+          <pre class="raw-report" id="raw-report" tabindex="0" aria-label="Formatted report" hidden><code id="raw-output"></code></pre>
+          <div class="verdict-bar" id="verdict-bar"><div class="verdict-symbol" aria-hidden="true">!</div><div><strong id="verdict-title">Block recommended</strong><p id="verdict-description">New capabilities deserve a closer look before merging.</p></div><div class="score"><span id="report-score">8</span><small>REVIEW SCORE</small></div></div>
+          <div class="report-footer"><div class="format-tabs" role="group" aria-label="Report format"><button type="button" data-format="visual" aria-pressed="true">Visual</button><button type="button" data-format="terminal" aria-pressed="false">Terminal</button><button type="button" data-format="json" aria-pressed="false">JSON</button><button type="button" data-format="markdown" aria-pressed="false">Markdown</button></div><button class="download-report text-button" id="download-report" type="button"><svg class="icon small"><use href="#i-download"/></svg> Download <span id="download-format">JSON</span></button></div>
+        </div>
+      </div>
+      <p class="demo-disclaimer">Explore precomputed reports from harmless, local fixtures. No package is executed. A recommendation is evidence for review, not proof of maliciousness.</p>
+    </section>
+
+    <div class="principles wrap"><div><strong>7</strong><span>capability categories</span></div><div><strong>3</strong><span>shareable report formats</span></div><div><strong>0</strong><span>package code executed</span></div><div><strong class="text-stat">Your machine.</strong><span>Your code stays local.</span></div></div>
+
+    <section class="section wrap" id="features" aria-labelledby="features-title">
+      <div class="section-heading"><p class="section-index">01 <span>BEYOND THE VERSION NUMBER</span></p><h2 id="features-title">The diff your lockfile<br>doesn’t show.</h2><p>A dependency can gain new powers without gaining a known CVE. depdiff makes those changes visible, one capability at a time.</p></div>
+      <div class="capability-layout">
+        <div class="capability-intro"><svg class="large-icon"><use href="#i-code"/></svg><h3>Same package.<br>New permissions?</h3><p>Scan JavaScript and lifecycle metadata for sensitive capabilities. See what was added, removed, or already there.</p><a class="inline-link" href="https://github.com/ashin-15/DepDiff/blob/main/rules/default.yaml" target="_blank" rel="noopener noreferrer">Read the detection rules <svg class="icon small"><use href="#i-external"/></svg></a><p class="tiny-note">Read-only regex analysis, not runtime tracing.</p></div>
+        <div class="capability-explorer"><div class="capability-options" role="group" aria-label="Explore capability categories"><button type="button" data-capability="network" aria-pressed="false"><span>01</span> Network <span class="cap-arrow">↗</span></button><button type="button" data-capability="fs" aria-pressed="false"><span>02</span> Filesystem <span class="cap-arrow">↗</span></button><button type="button" data-capability="process" aria-pressed="true"><span>03</span> Process <span class="cap-arrow">↗</span></button><button type="button" data-capability="env" aria-pressed="false"><span>04</span> Environment <span class="cap-arrow">↗</span></button><button type="button" data-capability="dynamic-code" aria-pressed="false"><span>05</span> Dynamic code <span class="cap-arrow">↗</span></button><button type="button" data-capability="crypto" aria-pressed="false"><span>06</span> Cryptography <span class="cap-arrow">↗</span></button><button type="button" data-capability="install-script" aria-pressed="false"><span>07</span> Install scripts <span class="cap-arrow">↗</span></button></div><div class="capability-detail" aria-live="polite"><div class="capability-detail-top"><span class="micro-label">PATTERN SPOTLIGHT</span><span class="severity" id="cap-severity">HIGH</span></div><h4 id="cap-title">A package that can<br>start another process.</h4><p id="cap-description">Child-process APIs can invoke shell commands and affect the host beyond the JavaScript runtime.</p><div class="cap-code"><span class="dim">// Illustrative pattern</span><code id="cap-code">child_process.exec(command);</code></div><span class="micro-label" id="cap-rule">process-child-process</span></div></div>
+      </div>
+      <div class="feature-notes"><article><span class="note-marker">+</span><h3>Metadata tells a story, too.</h3><p>Catch lifecycle scripts, dependency changes, and new <code>main</code>, <code>bin</code>, or <code>exports</code> entry points alongside source findings.</p></article><article><span class="note-marker">{ }</span><h3>Your rules. Plain YAML.</h3><p>Review and extend external detection rules. Set patterns, categories, severities, and reasons without changing the engine.</p></article><article><span class="note-marker">≠</span><h3>A signal. Not a sentence.</h3><p>Get deterministic scores and explainable reasons. Existing capability categories aren’t repeatedly scored as new risk.</p></article></div>
+    </section>
+
+    <section class="workflow-section" id="how-it-works" aria-labelledby="workflow-title"><div class="wrap section">
+      <div class="section-heading centered"><p class="section-index">02 <span>READ. COMPARE. EXPLAIN.</span></p><h2 id="workflow-title">From upgrade to understanding.</h2><p>No black box. No package execution. Just a small, inspectable pipeline that turns two local versions into a review you can act on.</p></div>
+      <ol class="workflow-steps"><li><span class="step-number">01</span><h3>Read both versions.</h3><p>Point to local npm fixtures. Validate names, versions, paths, and size limits before reading their contents.</p><span class="step-detail">package.json + JavaScript</span></li><li><span class="step-number">02</span><h3>Find the behavioral delta.</h3><p>Scan with YAML rules. Compare metadata and classify capabilities as added, removed, or unchanged.</p><span class="step-detail">old → new → what changed</span></li><li><span class="step-number">03</span><h3>Review the evidence.</h3><p>Get source locations, snippets, severity, and reasons. Share a terminal, JSON, or Markdown report.</p><span class="step-detail">ok / review / block-recommended</span></li></ol>
+      <div class="pipeline"><svg class="icon"><use href="#i-terminal"/></svg><code>two versions <span>→</span> static analysis <span>→</span> capability diff <span>→</span> your decision</code><span class="pipeline-end"><span class="status-dot"></span> ALL LOCAL</span></div>
+    </div></section>
+
+    <section class="section wrap" id="use-cases" aria-labelledby="use-cases-title">
+      <div class="use-cases-heading"><div class="section-heading"><p class="section-index">03 <span>A SECOND LOOK, WHERE IT COUNTS</span></p><h2 id="use-cases-title">Make “just an update”<br>an informed decision.</h2></div><p>Built for the people who have to decide what ships. Use depdiff alongside your existing vulnerability scanners and update bots.</p></div>
+      <div class="use-case-list"><article><div class="use-case-icon"><svg><use href="#i-branch"/></svg></div><div><span class="micro-label">FOR MAINTAINERS</span><h3>Review the upgrade, not thousands of lines.</h3><p>Before merging a dependency-update PR, compare the two local versions. Attach the Markdown report so the next reviewer sees the same evidence.</p></div><span class="use-case-tag">PULL REQUEST REVIEWS</span></article><article><div class="use-case-icon"><svg><use href="#i-shield"/></svg></div><div><span class="micro-label">FOR SECURITY TEAMS</span><h3>Look beyond known vulnerabilities.</h3><p>Investigate newly visible process, environment, network, or install-script capabilities, even when there isn’t a published advisory.</p></div><span class="use-case-tag">SUPPLY-CHAIN TRIAGE</span></article><article><div class="use-case-icon"><svg><use href="#i-terminal"/></svg></div><div><span class="micro-label">FOR LOCAL-FIRST DEVELOPERS</span><h3>Keep the review on your machine.</h3><p>Work offline with your own fixtures and detection rules. No account, remote service, API key, or source-code upload required.</p></div><span class="use-case-tag">OFFLINE ANALYSIS</span></article></div>
+    </section>
+
+    <section class="start-section section wrap" id="get-started" aria-labelledby="start-title">
+      <div class="start-copy"><p class="section-index">04 <span>TRY IT ON YOUR MACHINE</span></p><h2 id="start-title">One command.<br>A clearer picture.</h2><p>Clone the repository and compare the included harmless fixtures. Python 3.11.2, zero third-party dependencies, and no installation needed.</p><a class="inline-link" href="https://github.com/ashin-15/DepDiff#quick-start" target="_blank" rel="noopener noreferrer">Read the full documentation <svg class="icon small"><use href="#i-external"/></svg></a></div>
+      <div class="quickstart"><div class="quickstart-header"><div role="group" aria-label="Quick start method" class="quickstart-tabs"><button type="button" data-setup="python" aria-pressed="true">Python</button><button type="button" data-setup="docker" aria-pressed="false">Docker</button></div><span class="micro-label" id="setup-requirement">PYTHON 3.11.2</span></div><div class="setup-step"><span>01 / GET THE SOURCE</span><button type="button" class="icon-button" data-copy-target="clone-command" aria-label="Copy clone command"><svg class="icon small"><use href="#i-copy"/></svg></button><pre><code id="clone-command">git clone https://github.com/ashin-15/DepDiff.git
+cd DepDiff</code></pre></div><div class="setup-step"><span id="setup-label">02 / COMPARE THE FIXTURES</span><button type="button" class="icon-button" data-copy-target="setup-command" aria-label="Copy demo command"><svg class="icon small"><use href="#i-copy"/></svg></button><pre><code id="setup-command">python3 -m depdiff npm demo-package 1.0.0 2.0.0 \
+  --fixtures-dir fixtures</code></pre></div><div class="setup-step"><span>03 / SHARE THE EVIDENCE</span><button type="button" class="icon-button" data-copy-target="share-command" aria-label="Copy Markdown report command"><svg class="icon small"><use href="#i-copy"/></svg></button><pre><code id="share-command">python3 -m depdiff npm demo-package 1.0.0 2.0.0 \
+  --fixtures-dir fixtures --format markdown \
+  --output reports/review.md</code></pre></div><div class="quickstart-footer"><svg class="icon small"><use href="#i-check"/></svg> Included demos and tests work offline.</div></div>
+    </section>
+
+    <section class="faq-section section wrap" aria-labelledby="faq-title"><div><p class="section-index">GOOD TO KNOW</p><h2 id="faq-title">A little more context.</h2></div><div class="faq-list"><details><summary>Does this replace npm audit or Dependabot?<span>+</span></summary><p>No. Those tools help with known advisories and dependency updates. depdiff complements them with a version-to-version view of statically visible capabilities and metadata.</p></details><details><summary>Is the website running a live package analysis?<span>+</span></summary><p>No. The interactive showcase displays saved reports generated by the real CLI against synthetic fixtures. To analyze your own local versions, use the Python CLI.</p></details><details><summary>Can it download any package from npm?<span>+</span></summary><p>Not in the current MVP. You provide local package directories under the documented fixture layout. Registry retrieval, lockfile-wide analysis, and hosted scanning are not implemented.</p></details><details><summary>Does an “ok” verdict mean a package is safe?<span>+</span></summary><p>No. It means the configured static analysis found no new capability signal under its policy. Regex analysis can miss runtime-only behavior and obfuscation, or match comments and strings. Every verdict is a recommendation for human review.</p></details></div></section>
+
+    <section class="closing"><div class="wrap"><div class="closing-mark" aria-hidden="true">− <span>+</span></div><h2>Know what changed.<br><span>Then decide.</span></h2><p>Better dependency decisions start with better evidence.</p><a class="button primary" href="https://github.com/ashin-15/DepDiff" target="_blank" rel="noopener noreferrer"><svg class="icon"><use href="#i-github"/></svg> Explore depdiff on GitHub <svg class="icon"><use href="#i-external"/></svg></a></div></section>
+  </main>
+
+  <footer class="site-footer wrap"><a class="brand" href="#top"><img src="./assets/favicon.svg" width="30" height="30" alt=""><span>dep<span class="brand-light">diff</span></span></a><span class="footer-note">Open source. MIT licensed. Built for a closer look.</span><nav aria-label="Project links"><a href="https://github.com/ashin-15/DepDiff" target="_blank" rel="noopener noreferrer">Source</a><a href="https://github.com/ashin-15/DepDiff/blob/main/README.md" target="_blank" rel="noopener noreferrer">Docs</a><a href="https://github.com/ashin-15/DepDiff/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener noreferrer">Architecture <svg class="icon small"><use href="#i-external"/></svg></a></nav></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

@@ -1,0 +1,715 @@
+{
+  "schema_version": 1,
+  "scenarios": [
+    {
+      "id": "suspicious",
+      "label": "Installation, filesystem, and process capabilities added",
+      "command": "python3 -m depdiff npm demo-package 1.0.0 2.0.0 --fixtures-dir fixtures",
+      "report": {
+        "assessment": {
+          "reasons": [
+            "Added fs capability with 1 evidence finding(s).",
+            "Added install-script capability with 1 evidence finding(s).",
+            "Added process capability with 1 evidence finding(s)."
+          ],
+          "score": 8,
+          "severity": "HIGH",
+          "verdict": "block-recommended"
+        },
+        "capabilities": {
+          "diff": {
+            "added": [
+              {
+                "capability": "fs",
+                "change": "ADDED",
+                "findings": [
+                  {
+                    "capability": "fs",
+                    "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                    "line": 5,
+                    "reason": "Filesystem access can read or modify files outside the package source tree.",
+                    "rule_id": "fs-file-operation",
+                    "severity": "MEDIUM",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "new_findings": [
+                  {
+                    "capability": "fs",
+                    "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                    "line": 5,
+                    "reason": "Filesystem access can read or modify files outside the package source tree.",
+                    "rule_id": "fs-file-operation",
+                    "severity": "MEDIUM",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "old_findings": []
+              },
+              {
+                "capability": "install-script",
+                "change": "ADDED",
+                "findings": [
+                  {
+                    "capability": "install-script",
+                    "evidence": "scripts.postinstall: node scripts/setup.js",
+                    "line": 10,
+                    "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                    "rule_id": "install-script-lifecycle",
+                    "severity": "HIGH",
+                    "source_file": "package.json"
+                  }
+                ],
+                "new_findings": [
+                  {
+                    "capability": "install-script",
+                    "evidence": "scripts.postinstall: node scripts/setup.js",
+                    "line": 10,
+                    "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                    "rule_id": "install-script-lifecycle",
+                    "severity": "HIGH",
+                    "source_file": "package.json"
+                  }
+                ],
+                "old_findings": []
+              },
+              {
+                "capability": "process",
+                "change": "ADDED",
+                "findings": [
+                  {
+                    "capability": "process",
+                    "evidence": "exec('echo setup');",
+                    "line": 6,
+                    "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                    "rule_id": "process-child-process",
+                    "severity": "HIGH",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "new_findings": [
+                  {
+                    "capability": "process",
+                    "evidence": "exec('echo setup');",
+                    "line": 6,
+                    "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                    "rule_id": "process-child-process",
+                    "severity": "HIGH",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "old_findings": []
+              }
+            ],
+            "changes": [
+              {
+                "capability": "fs",
+                "change": "ADDED",
+                "findings": [
+                  {
+                    "capability": "fs",
+                    "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                    "line": 5,
+                    "reason": "Filesystem access can read or modify files outside the package source tree.",
+                    "rule_id": "fs-file-operation",
+                    "severity": "MEDIUM",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "new_findings": [
+                  {
+                    "capability": "fs",
+                    "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                    "line": 5,
+                    "reason": "Filesystem access can read or modify files outside the package source tree.",
+                    "rule_id": "fs-file-operation",
+                    "severity": "MEDIUM",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "old_findings": []
+              },
+              {
+                "capability": "install-script",
+                "change": "ADDED",
+                "findings": [
+                  {
+                    "capability": "install-script",
+                    "evidence": "scripts.postinstall: node scripts/setup.js",
+                    "line": 10,
+                    "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                    "rule_id": "install-script-lifecycle",
+                    "severity": "HIGH",
+                    "source_file": "package.json"
+                  }
+                ],
+                "new_findings": [
+                  {
+                    "capability": "install-script",
+                    "evidence": "scripts.postinstall: node scripts/setup.js",
+                    "line": 10,
+                    "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                    "rule_id": "install-script-lifecycle",
+                    "severity": "HIGH",
+                    "source_file": "package.json"
+                  }
+                ],
+                "old_findings": []
+              },
+              {
+                "capability": "process",
+                "change": "ADDED",
+                "findings": [
+                  {
+                    "capability": "process",
+                    "evidence": "exec('echo setup');",
+                    "line": 6,
+                    "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                    "rule_id": "process-child-process",
+                    "severity": "HIGH",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "new_findings": [
+                  {
+                    "capability": "process",
+                    "evidence": "exec('echo setup');",
+                    "line": 6,
+                    "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                    "rule_id": "process-child-process",
+                    "severity": "HIGH",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "old_findings": []
+              }
+            ],
+            "removed": [],
+            "unchanged": []
+          },
+          "new": {
+            "capabilities": [
+              "fs",
+              "install-script",
+              "process"
+            ],
+            "findings": [
+              {
+                "capability": "fs",
+                "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                "line": 5,
+                "reason": "Filesystem access can read or modify files outside the package source tree.",
+                "rule_id": "fs-file-operation",
+                "severity": "MEDIUM",
+                "source_file": "lib/index.js"
+              },
+              {
+                "capability": "install-script",
+                "evidence": "scripts.postinstall: node scripts/setup.js",
+                "line": 10,
+                "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                "rule_id": "install-script-lifecycle",
+                "severity": "HIGH",
+                "source_file": "package.json"
+              },
+              {
+                "capability": "process",
+                "evidence": "exec('echo setup');",
+                "line": 6,
+                "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                "rule_id": "process-child-process",
+                "severity": "HIGH",
+                "source_file": "lib/index.js"
+              }
+            ]
+          },
+          "old": {
+            "capabilities": [],
+            "findings": []
+          }
+        },
+        "metadata_diff": {
+          "changes": [
+            {
+              "area": "dependency",
+              "change": "modified",
+              "name": "dependencies:chalk",
+              "new_value": "^5.0.0",
+              "old_value": "^4.1.0"
+            },
+            {
+              "area": "dependency",
+              "change": "removed",
+              "name": "dependencies:debug",
+              "new_value": null,
+              "old_value": "^4.3.0"
+            },
+            {
+              "area": "dependency",
+              "change": "added",
+              "name": "dependencies:left-pad",
+              "new_value": "^1.3.0",
+              "old_value": null
+            },
+            {
+              "area": "entry-point",
+              "change": "added",
+              "name": "bin",
+              "new_value": {
+                "demo": "bin/demo.js"
+              },
+              "old_value": null
+            },
+            {
+              "area": "entry-point",
+              "change": "modified",
+              "name": "main",
+              "new_value": "lib/index.js",
+              "old_value": "index.js"
+            },
+            {
+              "area": "lifecycle-script",
+              "change": "added",
+              "name": "postinstall",
+              "new_value": "node scripts/setup.js",
+              "old_value": null
+            }
+          ],
+          "dependencies": [
+            {
+              "area": "dependency",
+              "change": "modified",
+              "name": "dependencies:chalk",
+              "new_value": "^5.0.0",
+              "old_value": "^4.1.0"
+            },
+            {
+              "area": "dependency",
+              "change": "removed",
+              "name": "dependencies:debug",
+              "new_value": null,
+              "old_value": "^4.3.0"
+            },
+            {
+              "area": "dependency",
+              "change": "added",
+              "name": "dependencies:left-pad",
+              "new_value": "^1.3.0",
+              "old_value": null
+            }
+          ],
+          "entry_points": [
+            {
+              "area": "entry-point",
+              "change": "added",
+              "name": "bin",
+              "new_value": {
+                "demo": "bin/demo.js"
+              },
+              "old_value": null
+            },
+            {
+              "area": "entry-point",
+              "change": "modified",
+              "name": "main",
+              "new_value": "lib/index.js",
+              "old_value": "index.js"
+            }
+          ],
+          "lifecycle_scripts": [
+            {
+              "area": "lifecycle-script",
+              "change": "added",
+              "name": "postinstall",
+              "new_value": "node scripts/setup.js",
+              "old_value": null
+            }
+          ]
+        },
+        "package": {
+          "name": "demo-package",
+          "new_version": "2.0.0",
+          "old_version": "1.0.0"
+        }
+      },
+      "terminal": "depdiff - behavioral dependency upgrade review\nPackage: demo-package\nUpgrade: 1.0.0 -> 2.0.0\nVerdict: block-recommended\nRisk score: 8\nHighest new severity: HIGH\n\nCapability changes:\n- ADDED: fs (1 finding(s))\n- ADDED: install-script (1 finding(s))\n- ADDED: process (1 finding(s))\n\nMetadata changes:\n- MODIFIED: dependency:dependencies:chalk (old=^4.1.0, new=^5.0.0)\n- REMOVED: dependency:dependencies:debug (old=^4.3.0)\n- ADDED: dependency:dependencies:left-pad (new=^1.3.0)\n- ADDED: entry-point:bin (new={\"demo\":\"bin/demo.js\"})\n- MODIFIED: entry-point:main (old=index.js, new=lib/index.js)\n- ADDED: lifecycle-script:postinstall (new=node scripts/setup.js)\n\nNew capability evidence:\n- MEDIUM fs via fs-file-operation at lib/index.js:5: Filesystem access can read or modify files outside the package source tree.\n  evidence: fs.readFileSync('/etc/hostname', 'utf8');\n- HIGH install-script via install-script-lifecycle at package.json:10: Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.\n  evidence: scripts.postinstall: node scripts/setup.js\n- HIGH process via process-child-process at lib/index.js:6: Process execution can invoke shell commands and affect the host outside the JavaScript runtime.\n  evidence: exec('echo setup');\n\nAssessment:\n- Added fs capability with 1 evidence finding(s).\n- Added install-script capability with 1 evidence finding(s).\n- Added process capability with 1 evidence finding(s).\n\nThis is an explainable review recommendation, not proof of maliciousness or safety.\n",
+      "markdown": "# depdiff review: `demo-package` 1.0.0 -> 2.0.0\n\n**Verdict:** `block-recommended`<br>\n**Risk score:** `8`<br>\n**Highest new severity:** `HIGH`\n\n> This is an explainable review recommendation, not proof of maliciousness or safety.\n\n## Capability changes\n\n| Capability | Status | Evidence count |\n| --- | --- | ---: |\n| `fs` | **ADDED** | 1 |\n| `install-script` | **ADDED** | 1 |\n| `process` | **ADDED** | 1 |\n\n## Metadata changes\n\n- **modified** `dependency:dependencies:chalk` (old `^4.1.0`; new `^5.0.0`)\n- **removed** `dependency:dependencies:debug` (old `^4.3.0`)\n- **added** `dependency:dependencies:left-pad` (new `^1.3.0`)\n- **added** `entry-point:bin` (new `{\"demo\":\"bin/demo.js\"}`)\n- **modified** `entry-point:main` (old `index.js`; new `lib/index.js`)\n- **added** `lifecycle-script:postinstall` (new `node scripts/setup.js`)\n\n## New capability evidence\n\n- **MEDIUM** `fs` via `fs-file-operation` at `lib/index.js:5` - Filesystem access can read or modify files outside the package source tree.\n\n  Evidence: `fs.readFileSync('/etc/hostname', 'utf8');`\n- **HIGH** `install-script` via `install-script-lifecycle` at `package.json:10` - Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.\n\n  Evidence: `scripts.postinstall: node scripts/setup.js`\n- **HIGH** `process` via `process-child-process` at `lib/index.js:6` - Process execution can invoke shell commands and affect the host outside the JavaScript runtime.\n\n  Evidence: `exec('echo setup');`\n\n## Assessment\n\n- Added fs capability with 1 evidence finding(s).\n- Added install-script capability with 1 evidence finding(s).\n- Added process capability with 1 evidence finding(s).\n"
+    },
+    {
+      "id": "benign",
+      "label": "Formatting update with no new capability evidence",
+      "command": "python3 -m depdiff npm benign-package 1.0.0 1.1.0 --fixtures-dir fixtures",
+      "report": {
+        "assessment": {
+          "reasons": [
+            "No new capability evidence or modified lifecycle scripts were found."
+          ],
+          "score": 0,
+          "severity": null,
+          "verdict": "ok"
+        },
+        "capabilities": {
+          "diff": {
+            "added": [],
+            "changes": [],
+            "removed": [],
+            "unchanged": []
+          },
+          "new": {
+            "capabilities": [],
+            "findings": []
+          },
+          "old": {
+            "capabilities": [],
+            "findings": []
+          }
+        },
+        "metadata_diff": {
+          "changes": [],
+          "dependencies": [],
+          "entry_points": [],
+          "lifecycle_scripts": []
+        },
+        "package": {
+          "name": "benign-package",
+          "new_version": "1.1.0",
+          "old_version": "1.0.0"
+        }
+      },
+      "terminal": "depdiff - behavioral dependency upgrade review\nPackage: benign-package\nUpgrade: 1.0.0 -> 1.1.0\nVerdict: ok\nRisk score: 0\nHighest new severity: none\n\nCapability changes:\n- none detected\n\nMetadata changes:\n- none\n\nNew capability evidence:\n- none\n\nAssessment:\n- No new capability evidence or modified lifecycle scripts were found.\n\nThis is an explainable review recommendation, not proof of maliciousness or safety.\n",
+      "markdown": "# depdiff review: `benign-package` 1.0.0 -> 1.1.0\n\n**Verdict:** `ok`<br>\n**Risk score:** `0`<br>\n**Highest new severity:** `none`\n\n> This is an explainable review recommendation, not proof of maliciousness or safety.\n\n## Capability changes\n\n| Capability | Status | Evidence count |\n| --- | --- | ---: |\n| None detected | - | 0 |\n\n## Metadata changes\n\n- None\n\n## New capability evidence\n\n- None\n\n## Assessment\n\n- No new capability evidence or modified lifecycle scripts were found.\n"
+    },
+    {
+      "id": "review",
+      "label": "Rollback: installation, filesystem, and process capabilities removed",
+      "command": "python3 -m depdiff npm demo-package 2.0.0 1.0.0 --fixtures-dir fixtures",
+      "report": {
+        "assessment": {
+          "reasons": [
+            "No new capability evidence or modified lifecycle scripts were found."
+          ],
+          "score": 0,
+          "severity": null,
+          "verdict": "ok"
+        },
+        "capabilities": {
+          "diff": {
+            "added": [],
+            "changes": [
+              {
+                "capability": "fs",
+                "change": "REMOVED",
+                "findings": [
+                  {
+                    "capability": "fs",
+                    "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                    "line": 5,
+                    "reason": "Filesystem access can read or modify files outside the package source tree.",
+                    "rule_id": "fs-file-operation",
+                    "severity": "MEDIUM",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "new_findings": [],
+                "old_findings": [
+                  {
+                    "capability": "fs",
+                    "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                    "line": 5,
+                    "reason": "Filesystem access can read or modify files outside the package source tree.",
+                    "rule_id": "fs-file-operation",
+                    "severity": "MEDIUM",
+                    "source_file": "lib/index.js"
+                  }
+                ]
+              },
+              {
+                "capability": "install-script",
+                "change": "REMOVED",
+                "findings": [
+                  {
+                    "capability": "install-script",
+                    "evidence": "scripts.postinstall: node scripts/setup.js",
+                    "line": 10,
+                    "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                    "rule_id": "install-script-lifecycle",
+                    "severity": "HIGH",
+                    "source_file": "package.json"
+                  }
+                ],
+                "new_findings": [],
+                "old_findings": [
+                  {
+                    "capability": "install-script",
+                    "evidence": "scripts.postinstall: node scripts/setup.js",
+                    "line": 10,
+                    "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                    "rule_id": "install-script-lifecycle",
+                    "severity": "HIGH",
+                    "source_file": "package.json"
+                  }
+                ]
+              },
+              {
+                "capability": "process",
+                "change": "REMOVED",
+                "findings": [
+                  {
+                    "capability": "process",
+                    "evidence": "exec('echo setup');",
+                    "line": 6,
+                    "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                    "rule_id": "process-child-process",
+                    "severity": "HIGH",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "new_findings": [],
+                "old_findings": [
+                  {
+                    "capability": "process",
+                    "evidence": "exec('echo setup');",
+                    "line": 6,
+                    "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                    "rule_id": "process-child-process",
+                    "severity": "HIGH",
+                    "source_file": "lib/index.js"
+                  }
+                ]
+              }
+            ],
+            "removed": [
+              {
+                "capability": "fs",
+                "change": "REMOVED",
+                "findings": [
+                  {
+                    "capability": "fs",
+                    "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                    "line": 5,
+                    "reason": "Filesystem access can read or modify files outside the package source tree.",
+                    "rule_id": "fs-file-operation",
+                    "severity": "MEDIUM",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "new_findings": [],
+                "old_findings": [
+                  {
+                    "capability": "fs",
+                    "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                    "line": 5,
+                    "reason": "Filesystem access can read or modify files outside the package source tree.",
+                    "rule_id": "fs-file-operation",
+                    "severity": "MEDIUM",
+                    "source_file": "lib/index.js"
+                  }
+                ]
+              },
+              {
+                "capability": "install-script",
+                "change": "REMOVED",
+                "findings": [
+                  {
+                    "capability": "install-script",
+                    "evidence": "scripts.postinstall: node scripts/setup.js",
+                    "line": 10,
+                    "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                    "rule_id": "install-script-lifecycle",
+                    "severity": "HIGH",
+                    "source_file": "package.json"
+                  }
+                ],
+                "new_findings": [],
+                "old_findings": [
+                  {
+                    "capability": "install-script",
+                    "evidence": "scripts.postinstall: node scripts/setup.js",
+                    "line": 10,
+                    "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                    "rule_id": "install-script-lifecycle",
+                    "severity": "HIGH",
+                    "source_file": "package.json"
+                  }
+                ]
+              },
+              {
+                "capability": "process",
+                "change": "REMOVED",
+                "findings": [
+                  {
+                    "capability": "process",
+                    "evidence": "exec('echo setup');",
+                    "line": 6,
+                    "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                    "rule_id": "process-child-process",
+                    "severity": "HIGH",
+                    "source_file": "lib/index.js"
+                  }
+                ],
+                "new_findings": [],
+                "old_findings": [
+                  {
+                    "capability": "process",
+                    "evidence": "exec('echo setup');",
+                    "line": 6,
+                    "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                    "rule_id": "process-child-process",
+                    "severity": "HIGH",
+                    "source_file": "lib/index.js"
+                  }
+                ]
+              }
+            ],
+            "unchanged": []
+          },
+          "new": {
+            "capabilities": [],
+            "findings": []
+          },
+          "old": {
+            "capabilities": [
+              "fs",
+              "install-script",
+              "process"
+            ],
+            "findings": [
+              {
+                "capability": "fs",
+                "evidence": "fs.readFileSync('/etc/hostname', 'utf8');",
+                "line": 5,
+                "reason": "Filesystem access can read or modify files outside the package source tree.",
+                "rule_id": "fs-file-operation",
+                "severity": "MEDIUM",
+                "source_file": "lib/index.js"
+              },
+              {
+                "capability": "install-script",
+                "evidence": "scripts.postinstall: node scripts/setup.js",
+                "line": 10,
+                "reason": "Lifecycle scripts run during package installation and can perform actions before a reviewer runs the package.",
+                "rule_id": "install-script-lifecycle",
+                "severity": "HIGH",
+                "source_file": "package.json"
+              },
+              {
+                "capability": "process",
+                "evidence": "exec('echo setup');",
+                "line": 6,
+                "reason": "Process execution can invoke shell commands and affect the host outside the JavaScript runtime.",
+                "rule_id": "process-child-process",
+                "severity": "HIGH",
+                "source_file": "lib/index.js"
+              }
+            ]
+          }
+        },
+        "metadata_diff": {
+          "changes": [
+            {
+              "area": "dependency",
+              "change": "modified",
+              "name": "dependencies:chalk",
+              "new_value": "^4.1.0",
+              "old_value": "^5.0.0"
+            },
+            {
+              "area": "dependency",
+              "change": "added",
+              "name": "dependencies:debug",
+              "new_value": "^4.3.0",
+              "old_value": null
+            },
+            {
+              "area": "dependency",
+              "change": "removed",
+              "name": "dependencies:left-pad",
+              "new_value": null,
+              "old_value": "^1.3.0"
+            },
+            {
+              "area": "entry-point",
+              "change": "removed",
+              "name": "bin",
+              "new_value": null,
+              "old_value": {
+                "demo": "bin/demo.js"
+              }
+            },
+            {
+              "area": "entry-point",
+              "change": "modified",
+              "name": "main",
+              "new_value": "index.js",
+              "old_value": "lib/index.js"
+            },
+            {
+              "area": "lifecycle-script",
+              "change": "removed",
+              "name": "postinstall",
+              "new_value": null,
+              "old_value": "node scripts/setup.js"
+            }
+          ],
+          "dependencies": [
+            {
+              "area": "dependency",
+              "change": "modified",
+              "name": "dependencies:chalk",
+              "new_value": "^4.1.0",
+              "old_value": "^5.0.0"
+            },
+            {
+              "area": "dependency",
+              "change": "added",
+              "name": "dependencies:debug",
+              "new_value": "^4.3.0",
+              "old_value": null
+            },
+            {
+              "area": "dependency",
+              "change": "removed",
+              "name": "dependencies:left-pad",
+              "new_value": null,
+              "old_value": "^1.3.0"
+            }
+          ],
+          "entry_points": [
+            {
+              "area": "entry-point",
+              "change": "removed",
+              "name": "bin",
+              "new_value": null,
+              "old_value": {
+                "demo": "bin/demo.js"
+              }
+            },
+            {
+              "area": "entry-point",
+              "change": "modified",
+              "name": "main",
+              "new_value": "index.js",
+              "old_value": "lib/index.js"
+            }
+          ],
+          "lifecycle_scripts": [
+            {
+              "area": "lifecycle-script",
+              "change": "removed",
+              "name": "postinstall",
+              "new_value": null,
+              "old_value": "node scripts/setup.js"
+            }
+          ]
+        },
+        "package": {
+          "name": "demo-package",
+          "new_version": "1.0.0",
+          "old_version": "2.0.0"
+        }
+      },
+      "terminal": "depdiff - behavioral dependency upgrade review\nPackage: demo-package\nUpgrade: 2.0.0 -> 1.0.0\nVerdict: ok\nRisk score: 0\nHighest new severity: none\n\nCapability changes:\n- REMOVED: fs (1 finding(s))\n- REMOVED: install-script (1 finding(s))\n- REMOVED: process (1 finding(s))\n\nMetadata changes:\n- MODIFIED: dependency:dependencies:chalk (old=^5.0.0, new=^4.1.0)\n- ADDED: dependency:dependencies:debug (new=^4.3.0)\n- REMOVED: dependency:dependencies:left-pad (old=^1.3.0)\n- REMOVED: entry-point:bin (old={\"demo\":\"bin/demo.js\"})\n- MODIFIED: entry-point:main (old=lib/index.js, new=index.js)\n- REMOVED: lifecycle-script:postinstall (old=node scripts/setup.js)\n\nNew capability evidence:\n- none\n\nAssessment:\n- No new capability evidence or modified lifecycle scripts were found.\n\nThis is an explainable review recommendation, not proof of maliciousness or safety.\n",
+      "markdown": "# depdiff review: `demo-package` 2.0.0 -> 1.0.0\n\n**Verdict:** `ok`<br>\n**Risk score:** `0`<br>\n**Highest new severity:** `none`\n\n> This is an explainable review recommendation, not proof of maliciousness or safety.\n\n## Capability changes\n\n| Capability | Status | Evidence count |\n| --- | --- | ---: |\n| `fs` | **REMOVED** | 1 |\n| `install-script` | **REMOVED** | 1 |\n| `process` | **REMOVED** | 1 |\n\n## Metadata changes\n\n- **modified** `dependency:dependencies:chalk` (old `^5.0.0`; new `^4.1.0`)\n- **added** `dependency:dependencies:debug` (new `^4.3.0`)\n- **removed** `dependency:dependencies:left-pad` (old `^1.3.0`)\n- **removed** `entry-point:bin` (old `{\"demo\":\"bin/demo.js\"}`)\n- **modified** `entry-point:main` (old `lib/index.js`; new `index.js`)\n- **removed** `lifecycle-script:postinstall` (old `node scripts/setup.js`)\n\n## New capability evidence\n\n- None\n\n## Assessment\n\n- No new capability evidence or modified lifecycle scripts were found.\n"
+    }
+  ]
+}

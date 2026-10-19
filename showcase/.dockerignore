@@ -1,0 +1,11 @@
+# Root-context builds use the repository's root .dockerignore instead.
+.git/
+.venv/
+__pycache__/
+*.py[cod]
+node_modules/
+.DS_Store
+.env
+.env.*
+Dockerfile
+.dockerignore
