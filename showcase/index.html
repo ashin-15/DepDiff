@@ -17,6 +17,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div id="scroll-progress" class="scroll-progress" data-progress="0" aria-hidden="true"><span></span></div>
   <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
     <symbol id="i-external" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
@@ -50,7 +51,7 @@
           <svg viewBox="0 0 230 80" fill="none"><path class="art-line" d="M0 40h52c22 0 22-24 44-24h38c22 0 22 24 44 24h52"/><path class="art-line lower" d="M0 40h52c22 0 22 24 44 24h38c22 0 22-24 44-24h52"/><rect x="89" y="13" width="52" height="54" rx="12" fill="#17221a" stroke="#426549"/><path d="M102 30h11m-5.5-5.5v11M118 49h11" stroke="#b6edba" stroke-width="2.5" stroke-linecap="round"/><circle class="travel-dot" r="3" fill="#b6edba"><animateMotion dur="5s" repeatCount="indefinite" path="M0 40h52c22 0 22-24 44-24h38c22 0 22 24 44 24h52"/></circle></svg>
           <span class="version-tag new">v2.0.0</span>
         </div>
-        <h1 id="hero-title">Small update.<br><span>Different behavior.</span></h1>
+        <h1 id="hero-title"><span class="hero-line">Small update.</span><br><span class="hero-line accent">Different behavior.</span></h1>
         <p class="hero-description">The version number changed. What else did?<br class="desktop-break"> Compare npm upgrades, uncover new capabilities, and get the evidence before you merge.</p>
         <div class="hero-actions"><a class="button primary" href="#demo">Explore a real diff <svg class="icon"><use href="#i-arrow"/></svg></a><a class="button secondary" href="#get-started"><svg class="icon"><use href="#i-terminal"/></svg> Get started</a></div>
         <p class="hero-note"><span>Python 3.11</span><span>No API keys</span><span>Never executes package code</span></p>
@@ -66,7 +67,7 @@
         <div id="demo-loading" class="demo-loading" role="status">The interactive comparison requires JavaScript.</div>
         <div id="demo-error" class="demo-error" hidden><p>The saved report could not be loaded. The CLI still works offline.</p><button type="button" class="text-button" id="retry-demo">Try again <svg class="icon small"><use href="#i-arrow"/></svg></button></div>
         <noscript><p class="demo-error">Enable JavaScript to explore the saved reports, or run the command above in a local checkout.</p></noscript>
-        <div id="demo-content" hidden>
+        <div id="demo-content" data-transition="idle" aria-busy="false" hidden>
           <div class="report-heading"><div><svg class="icon"><use href="#i-branch"/></svg><strong id="report-package">demo-package</strong><span id="report-versions" class="mono">1.0.0 <span class="dim">→</span> 2.0.0</span></div><span class="analysis-done"><svg class="icon small"><use href="#i-check"/></svg> Comparison complete</span></div>
           <div class="visual-report" id="visual-report">
             <div class="findings-pane"><div class="pane-label">CAPABILITY CHANGES <span id="change-count">3 added</span></div><div id="finding-list" class="finding-list" role="group" aria-label="Capability findings"></div><p id="metadata-summary" class="metadata-summary"></p></div>

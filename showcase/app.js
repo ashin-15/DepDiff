@@ -4,6 +4,20 @@ const $$ = (selector) => [...document.querySelectorAll(selector)];
 const state = { scenarios: [], scenario: null, format: 'visual', finding: null };
 let toastTimeout;
 let loading = false;
+let renderVersion = 0;
+let scrollFrame;
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+function replayClass(element, className) {
+  if (!element) return;
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+}
+
+function clamp(value, minimum = 0, maximum = 1) {
+  return Math.min(maximum, Math.max(minimum, value));
+}
 
 function notify(message) {
   clearTimeout(toastTimeout);
@@ -49,6 +63,7 @@ function renderEvidence(change) {
     $('#evidence-line').textContent = '✓';
     $('#evidence-code').textContent = 'No sensitive capability category was added.';
     $('#evidence-reason').textContent = 'This comparison did not introduce a capability signal under the configured rules. An ok verdict is not a guarantee of safety; static analysis has limits.';
+    replayClass($('#evidence-line'), 'is-fresh');
     return;
   }
   $('#evidence-location').textContent = `${finding.source_file}:${finding.line}`;
@@ -58,6 +73,7 @@ function renderEvidence(change) {
   $('#evidence-line').textContent = finding.line;
   $('#evidence-code').textContent = finding.evidence;
   $('#evidence-reason').textContent = finding.reason;
+  replayClass($('#evidence-line'), 'is-fresh');
 }
 
 function renderFindings(report) {
@@ -71,11 +87,12 @@ function renderFindings(report) {
   $('#change-count').textContent = counts.join(' / ') || '0 added';
   const list = $('#finding-list');
   list.replaceChildren();
-  changes.forEach((change) => {
+  changes.forEach((change, index) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'finding-button';
+    button.className = 'finding-button finding-enter';
     button.dataset.finding = change.capability;
+    button.dataset.findingIndex = String(index);
     button.setAttribute('aria-pressed', 'false');
     const sign = document.createElement('span');
     sign.className = `finding-sign${change.change === 'REMOVED' ? ' removed' : ''}`;
@@ -107,6 +124,11 @@ function renderFindings(report) {
 function selectScenario(id) {
   const scenario = state.scenarios.find((item) => item.id === id);
   if (!scenario) return;
+  const content = $('#demo-content');
+  const version = ++renderVersion;
+  content.classList.add('is-switching');
+  content.dataset.transition = 'switching';
+  content.setAttribute('aria-busy', 'true');
   state.scenario = scenario;
   const report = scenario.report;
   setPressed('[data-scenario]', 'scenario', id);
@@ -129,6 +151,14 @@ function selectScenario(id) {
   $('#metadata-summary').textContent = `+ ${count} metadata change${count === 1 ? '' : 's'} in the full report`;
   renderFindings(report);
   renderFormat();
+  replayClass($('#verdict-bar'), 'is-fresh');
+  replayClass($('#report-score'), 'is-fresh');
+  requestAnimationFrame(() => {
+    if (version !== renderVersion) return;
+    content.classList.remove('is-switching');
+    content.dataset.transition = 'idle';
+    content.setAttribute('aria-busy', 'false');
+  });
 }
 
 async function loadReports() {
@@ -158,6 +188,7 @@ async function loadReports() {
     clearTimeout(timeout);
     loading = false;
     $('#demo-loading').hidden = true;
+    scheduleScrollUI();
   }
 }
 
@@ -244,6 +275,9 @@ $$('[data-capability]').forEach((button) => {
   button.addEventListener('click', () => {
     const category = button.dataset.capability;
     const capability = capabilities[category];
+    if (!capability) return;
+    const detail = $('.capability-detail');
+    detail.classList.add('is-changing');
     setPressed('[data-capability]', 'capability', category);
     $('#cap-title').textContent = capability.title;
     $('#cap-description').textContent = capability.description;
@@ -251,6 +285,8 @@ $$('[data-capability]').forEach((button) => {
     $('#cap-rule').textContent = capability.rule;
     $('#cap-severity').textContent = capability.severity;
     $('#cap-severity').className = `severity ${capability.severity.toLowerCase()}`;
+    replayClass($('#cap-code').parentElement, 'is-fresh');
+    requestAnimationFrame(() => detail.classList.remove('is-changing'));
   });
 });
 
@@ -279,6 +315,88 @@ $$('[data-setup]').forEach((button) => {
     $('#setup-requirement').textContent = setup.requirement;
   });
 });
+
+const revealGroups = [
+  '.principles > div',
+  '#features .feature-notes > article',
+  '#how-it-works .workflow-steps > li',
+  '#use-cases .use-case-list > article',
+];
+const revealTargets = [
+  '.demo-caption', '#demo .review-window', '.demo-disclaimer',
+  '#features .section-heading', '#features .capability-layout > *',
+  '#how-it-works .section-heading', '#how-it-works .pipeline',
+  '#use-cases .use-cases-heading', '#get-started > *',
+  '.faq-section > *', '.closing .wrap', ...revealGroups,
+];
+
+function setupScrollReveals() {
+  const targets = [...new Set(revealTargets.flatMap((selector) => $$(selector)))];
+  revealGroups.forEach((selector) => {
+    $$(selector).forEach((element, index) => element.dataset.revealOrder = String(index + 1));
+  });
+  targets.forEach((element) => { element.dataset.reveal = ''; });
+  document.documentElement.classList.add('motion-ready');
+  const show = (element) => element.classList.add('is-visible');
+  if (reducedMotion.matches || !('IntersectionObserver' in window)) {
+    targets.forEach(show);
+    return;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      show(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+  targets.forEach((element) => observer.observe(element));
+}
+
+function updateScrollUI() {
+  const progress = clamp((window.scrollY || window.pageYOffset) / Math.max(1, document.documentElement.scrollHeight - innerHeight));
+  const progressBar = $('#scroll-progress');
+  progressBar.dataset.progress = progress.toFixed(3);
+  progressBar.style.setProperty('--scroll-progress', progress.toFixed(3));
+  $('.site-header').dataset.scrolled = String(window.scrollY > 24);
+
+  const activeLine = innerHeight * 0.28;
+  const sectionIds = ['features', 'how-it-works', 'use-cases', 'get-started'];
+  let activeSection = '';
+  sectionIds.forEach((id) => {
+    const section = document.getElementById(id);
+    const bounds = section.getBoundingClientRect();
+    if (bounds.top <= activeLine && bounds.bottom > activeLine) activeSection = id;
+  });
+  $$('.desktop-nav a, #mobile-nav a').forEach((link) => {
+    const isActive = link.getAttribute('href') === `#${activeSection}`;
+    link.dataset.active = String(isActive);
+    if (isActive) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+
+  const workflow = $('#how-it-works .workflow-steps');
+  const workflowBounds = $('#how-it-works').getBoundingClientRect();
+  const workflowProgress = clamp((innerHeight * 0.76 - workflowBounds.top) / (workflowBounds.height + innerHeight * 0.38));
+  workflow.style.setProperty('--workflow-progress', workflowProgress.toFixed(3));
+  workflow.dataset.progress = workflowProgress.toFixed(3);
+  const activeStep = Math.min(2, Math.max(0, Math.floor(workflowProgress * 3.2)));
+  $$('#how-it-works .workflow-steps > li').forEach((step, index) => {
+    step.dataset.active = String(index <= activeStep && workflowProgress > 0.04);
+  });
+}
+
+function scheduleScrollUI() {
+  if (scrollFrame) return;
+  scrollFrame = requestAnimationFrame(() => {
+    scrollFrame = undefined;
+    updateScrollUI();
+  });
+}
+
+setupScrollReveals();
+window.addEventListener('scroll', scheduleScrollUI, { passive: true });
+window.addEventListener('resize', scheduleScrollUI, { passive: true });
+updateScrollUI();
 
 const menuButton = $('.menu-toggle');
 const menu = $('#mobile-nav');

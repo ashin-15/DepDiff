@@ -44,6 +44,15 @@ async function checkTypography(page) {
   assert.deepEqual(result.failures, [], 'Text must keep a readable, preference-relative type scale');
 }
 
+async function assertScenarioSettled(page, id) {
+  await page.waitForFunction((expectedId) => {
+    const content = document.querySelector('#demo-content');
+    const selected = document.querySelector('.scenario-tabs button[aria-pressed="true"]');
+    return content && !content.hidden && content.dataset.transition === 'idle'
+      && content.getAttribute('aria-busy') === 'false' && selected?.dataset.scenario === expectedId;
+  }, id);
+}
+
 async function audit(page, label) {
   if (!process.env.AXE_MODULE) return;
   // Only the locally installed testing tool is injected, never a site dependency.
@@ -90,6 +99,7 @@ async function main() {
     await page.locator('#demo').screenshot({ path: path.join(output, 'desktop-demo.png') });
     // Axe uses injected styles internally, so audit without the production CSP.
     const auditPage = await browser.newPage({ viewport: { width: 1440, height: 1050 } });
+    await auditPage.emulateMedia({ reducedMotion: 'reduce' });
     await auditPage.goto(base);
     await visible(auditPage, '#demo-content');
     await audit(auditPage, 'desktop');
@@ -146,6 +156,27 @@ async function main() {
     await mobile.evaluate(() => document.fonts.ready);
     await checkWidth(mobile);
     await checkTypography(mobile);
+    const reducedMotion = await mobile.evaluate(() => ({
+      scrollBehavior: getComputedStyle(document.documentElement).scrollBehavior,
+      buttonTransitionDuration: getComputedStyle(document.querySelector('.button')).transitionDuration,
+      menuBarTransitionDuration: getComputedStyle(document.querySelector('.menu-toggle > span')).transitionDuration,
+      travelDotDisplay: getComputedStyle(document.querySelector('.travel-dot')).display,
+    }));
+    assert.equal(reducedMotion.scrollBehavior, 'auto');
+    assert.equal(reducedMotion.buttonTransitionDuration, '0s');
+    assert.equal(reducedMotion.menuBarTransitionDuration, '0s');
+    assert.equal(reducedMotion.travelDotDisplay, 'none');
+    await mobile.waitForFunction(() => Number(document.querySelector('#scroll-progress').dataset.progress) <= 0.001);
+    assert.equal(await mobile.locator('.site-header').getAttribute('data-scrolled'), 'false');
+    const maxScroll = await mobile.evaluate(() => document.documentElement.scrollHeight - innerHeight);
+    assert(maxScroll > 0);
+    await mobile.evaluate((position) => window.scrollTo(0, position), maxScroll / 2);
+    await mobile.waitForFunction(() => Number(document.querySelector('#scroll-progress').dataset.progress) > 0);
+    assert.equal(await mobile.locator('.site-header').getAttribute('data-scrolled'), 'true');
+    const middleProgress = Number(await mobile.locator('#scroll-progress').getAttribute('data-progress'));
+    assert(middleProgress > 0 && middleProgress < 1);
+    await mobile.evaluate(() => window.scrollTo(0, 0));
+    await mobile.waitForFunction(() => Number(document.querySelector('#scroll-progress').dataset.progress) <= 0.001);
     await mobile.screenshot({ path: path.join(output, 'mobile.png') });
     await mobile.screenshot({ path: path.join(output, 'mobile-full.png'), fullPage: true });
     await mobile.locator('#demo').screenshot({ path: path.join(output, 'mobile-demo.png') });
@@ -158,6 +189,8 @@ async function main() {
     assert.equal(await mobile.locator('.menu-toggle').getAttribute('aria-expanded'), 'false');
     assert.equal(new URL(mobile.url()).hash, '#use-cases');
     await mobile.locator('[data-format="json"]').click();
+    await mobile.locator('[data-scenario="review"]').click();
+    await assertScenarioSettled(mobile, 'review');
     await checkWidth(mobile);
     await mobile.setViewportSize({ width: 320, height: 740 });
     await checkWidth(mobile);
@@ -182,6 +215,7 @@ async function main() {
     }
 
     const mobileAudit = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    await mobileAudit.emulateMedia({ reducedMotion: 'reduce' });
     await mobileAudit.goto(base);
     await visible(mobileAudit, '#demo-content');
     await audit(mobileAudit, 'mobile');
@@ -203,6 +237,12 @@ async function main() {
     assert(await noJs.locator('h1').isVisible());
     assert(await noJs.locator('noscript').isVisible());
     assert(await noJs.locator('#get-started').textContent());
+    assert(await noJs.locator('#demo-loading').isVisible());
+    assert.match(await noJs.locator('#demo-loading').textContent(), /requires JavaScript/);
+    assert(await noJs.locator('#demo-content').isHidden());
+    assert(await noJs.locator('button[data-scenario="suspicious"]').isDisabled());
+    await noJs.locator('.hero-actions a[href="#demo"]').click();
+    assert.equal(new URL(noJs.url()).hash, '#demo');
     await noJs.close();
     assert.deepEqual(externalRequests, [], 'The showcase must make no third-party requests');
     assert.deepEqual(errors, [], 'The page must have no JavaScript or CSP console errors');
