@@ -84,13 +84,14 @@ illustrative patterns, not runtime tracing.
 
 ## Quick start
 
-Use **Python 3.11.2** and `make`, or follow the [clean-machine Docker workflow](#docker).
-No API keys, package installation, or external service are needed for the demos.
+Use **Python 3.11.x** and `make`, or follow the [clean-machine Docker workflow](#docker).
+Python 3.11.2 is the repository's reproducibility baseline. No API keys, package
+installation, or external service are needed for the demos.
 
 ```sh
 git clone https://github.com/ashin-15/DepDiff.git
 cd DepDiff
-python3 -m depdiff npm demo-package 1.0.0 2.0.0 --fixtures-dir fixtures
+python3.11 -m depdiff npm demo-package 1.0.0 2.0.0 --fixtures-dir fixtures
 ```
 
 The repository pins Python with `.python-version` and uses no third-party
@@ -118,7 +119,7 @@ and child-process execution. The output includes evidence and recommends
 The benign scenario remains `ok`, with no newly detected capability signal:
 
 ```console
-$ python3 -m depdiff npm benign-package 1.0.0 1.1.0 --fixtures-dir fixtures
+$ python3.11 -m depdiff npm benign-package 1.0.0 1.1.0 --fixtures-dir fixtures
 ```
 
 <details>
@@ -133,23 +134,78 @@ under the configured rules, not a guarantee of safety.
 
 ## Installation
 
-For local development, running `python3 -m depdiff` does not require an
-installation. To install the console command into a virtual environment:
+The core package supports CPython `>=3.11,<3.12`. The repository uses Python
+3.11.2 as its reproducibility baseline, but any Python 3.11.x interpreter is
+supported. The CLI has no third-party runtime dependencies and the installer
+does not download packages from an index.
+
+### Recommended: install with the script
+
+The single installation script creates an isolated virtual environment and
+adds a `depdiff` command to a user-local prefix. It does not modify the
+system-managed Python and does not require `sudo`:
 
 ```console
-$ python3 -m venv .venv
+$ git clone https://github.com/ashin-15/DepDiff.git
+$ cd DepDiff
+$ PYTHON_BIN=python3.11 PREFIX="$HOME/.local" scripts/install.sh
+$ export PATH="$HOME/.local/bin:$PATH"
+$ depdiff --version
+```
+
+The script is safe to run again. It updates the virtual environment's package
+and replaces its own command symlink, but refuses to overwrite an existing
+non-symlink at the destination. Use `scripts/install.sh --help` for all
+environment overrides.
+
+For a system-wide command, choose the prefix and virtual environment location
+explicitly and run the same script with privileges:
+
+```console
+$ sudo env PYTHON_BIN=python3.11 PREFIX=/usr/local \
+    VENV_DIR=/opt/depdiff/venv scripts/install.sh
+$ /usr/local/bin/depdiff --help
+```
+
+The script expects Python 3.11 and its `venv` module to already be installed;
+it does not install operating-system packages. On Debian-based systems, the
+package providing that module is commonly named `python3.11-venv`. Package
+names vary by distribution.
+
+### Other installation and usage methods
+
+For local development, running the module directly from the checkout does not
+require installation:
+
+```console
+$ python3.11 -m depdiff npm demo-package 1.0.0 2.0.0 --fixtures-dir fixtures
+```
+
+To install the console command into a project-local virtual environment:
+
+```console
+$ python3.11 -m venv .venv
 $ .venv/bin/python -m pip install --no-index --no-deps .
 $ .venv/bin/depdiff --help
 ```
 
-The required local runtime is exactly Python `3.11.2`, as recorded in
-`.python-version` and `pyproject.toml`. The `.env.example` file contains only
-non-secret process defaults; depdiff does not require an `.env` file, API key,
-database, or other external service.
+The package can also be run in Docker without installing Python on the host;
+see the [Docker workflow](#docker) below. The installation script is a POSIX
+shell script. On Windows, use the equivalent project-local virtual environment
+commands from PowerShell:
+
+```powershell
+PS> py -3.11 -m venv .venv
+PS> .venv\Scripts\python.exe -m pip install --no-index --no-deps .
+PS> .venv\Scripts\depdiff.exe --help
+```
+
+The `.env.example` file contains only non-secret process defaults. depdiff does
+not require an `.env` file, API key, database, or other external service.
 
 The project-local PEP 517 backend has no build requirements, so this command
 does not need a package index. The same package can be built and installed in a
-clean Python 3.11.2 environment.
+clean Python 3.11.x environment.
 
 ## CLI and reports
 
